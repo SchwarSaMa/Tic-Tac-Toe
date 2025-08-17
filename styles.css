@@ -1,0 +1,65 @@
+*,
+::after,
+::before{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*Initial Screen*/
+#initial-screen{
+    display: none;
+}
+
+#create-player{
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+/*Game Screen*/
+#game-screen{
+    border: 1px solid violet;
+}
+
+#total-points{
+    border: 1px solid black;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+}
+
+.name, .points{
+    border: 1px solid green;
+    text-align: center;
+}
+
+#gameboard{
+    border: 1px solid black;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5px;
+}
+
+.game-cell{
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10vw;
+    aspect-ratio: 1 / 1;
+    font-size: 8vw;
+}
+
+#quit-game-btn{
+    border: 1px solid pink;
+    width: 100%;
+}
