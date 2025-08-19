@@ -56,13 +56,24 @@ function gameboard() {
    return {initResBoard, getBoard, printBoard, addToken, determineWinner};
 }
 
-function determinePlayer() {
-    let player = Math.floor(Math.random() * 2);
+function createPlayer(name, token) {
+    const playerName = name;
+    const playerToken = token;
 
-    const getPlayer = () => player;
+    let score = 0;
+
+    const addScore = () => score++;
+    const getScore = () => score;
+
+    return {playerName, playerToken, addScore, getScore} 
+}
+
+function determinePlayer(players) {
+    let playerInd = Math.floor(Math.random() * 2);
+
+    const getPlayer = () => players[playerInd];
     const changePlayer = () => {
-        player === 0 ? player = 1 : player = 0;
-        return player;
+        playerInd === 0 ? playerInd = 1 : playerInd = 0;
     };
 
     return {getPlayer, changePlayer};
@@ -70,38 +81,27 @@ function determinePlayer() {
 
 function gameController (){
     const board = gameboard();
-    const player = determinePlayer();
-    let activePlayer = player.getPlayer();
-    const players = [
-        {
-            name: 'playerOne',
-            token: 'X',
-            score: 0
-        },
-
-        {
-            name: 'playerTwo',
-            token: 'O',
-            score: 0
-        }
-    ];
+    const pOne = createPlayer('max', 'X');
+    const pTwo = createPlayer('david', 'O');
+    const players = [pOne, pTwo];
+    const detPlayer = determinePlayer(players);
 
     // Initialize game with a new board and a random player to start.
     board.initResBoard();
     board.printBoard();
-    console.log(`${players[activePlayer].name}'s turn`);
+    console.log(`${detPlayer.getPlayer().playerName}'s turn`);
 
     // We'll use this function to play the game in the console.
     const playRound = (row, col) => {
         let activeToken;
 
-        const validMove = board.addToken(row, col, activeToken = players[activePlayer].token);
+        const validMove = board.addToken(row, col, activeToken = detPlayer.getPlayer().playerToken);
         board.printBoard();
 
         if(board.determineWinner(activeToken).isWin){
-            players[activePlayer].score += 1;
+            detPlayer.getPlayer().addScore();
             console.log('______________________________________');
-            console.log(`${players[activePlayer].name} wins!`);
+            console.log(`${detPlayer.getPlayer().playerName} wins!`);
             console.log('______________________________________');
             setTimeout(() => {
                 console.clear();
@@ -118,13 +118,12 @@ function gameController (){
                 console.log('To start Tic Tac Toe type "nameYourGame = startGame()".')
             }, 3000);
         }else if(validMove && !board.determineWinner(activeToken).isWin && !board.determineWinner(activeToken).isTie){
-            prevToken = players[player.getPlayer()].token
-            activePlayer = player.changePlayer();
-            activeToken = players[activePlayer].token;
-            console.log(`${players[activePlayer].name}'s turn`);
+            detPlayer.changePlayer();
+            activeToken = detPlayer.getPlayer().playerToken;
+            console.log(`${detPlayer.getPlayer().playerName}'s turn`);
         } else {
             console.log('Invalid move. Place your token elsewhere!');
-            console.log(`${players[activePlayer].name}'s turn`);
+            console.log(`${detPlayer.getPlayer().playerName}'s turn`);
         }
         return board
     };
@@ -142,8 +141,8 @@ function gameController (){
         for(i = 0; i < gameCell.length; i++){
             gameCell[i].textContent = gameBoard.getBoard().flat()[i];
         };
-        scores[0].textContent = game.players[0].score
-        scores[1].textContent = game.players[1].score
+        scores[0].textContent = game.players[0].getScore();
+        scores[1].textContent = game.players[1].getScore();
     };
 
     // Event Listeners
