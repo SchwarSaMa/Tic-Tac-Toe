@@ -3,38 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
     <title>Tic Tac Toe</title>
 </head>
 <body>
-    <div id="initial-screen">
+    <div id="initial-screen" class="screen">
         <form id="create-player">
-            <label>Enter your name, player One</label>
-            <input type="text">
-            <label>Enter your name, player Two</label>
-            <input type="text">
-            <button type="button">Start Game</button>
+            <label for="name-playerOne">Player 1's name</label>
+            <input id="name-playerOne" type="text" name="name-playerOne" required>
+            <label for="name-playerTwo">Player 2's name</label>
+            <input id="name-playerTwo" type="text" name="name-playerTwo" required>
+            <button type="submit">Start Game</button>
         </form>
     </div>
 
-    <div id="game-screen">
+    <div id="game-screen" class="screen">
         <div id="total-points">
-            <div id="player-one" class="name"></div>
-            <div id="player-two" class="name"></div>
-            <div id="player-one-points" class="points"></div>
-            <div id="player-two-points" class="points"></div>
+            <div id="player-one" class="name">NameOne</div>
+            <div id="player-two" class="name">NameTwo</div>
+            <div id="player-one-points" class="points">0</div>
+            <div id="player-two-points" class="points">0</div>
         </div>
         <div id="gameboard">
-            <div class="game-cell"></div>
-            <div class="game-cell"></div>
-            <div class="game-cell"></div>
-            <div class="game-cell"></div>
-            <div class="game-cell"></div>
-            <div class="game-cell"></div>
-            <div class="game-cell"></div>
-            <div class="game-cell"></div>
-            <div class="game-cell"></div>
+            <div class="game-cell" data-coordinates="00" value="X"></div>
+            <div class="game-cell" data-coordinates="01"></div>
+            <div class="game-cell" data-coordinates="02"></div>
+            <div class="game-cell" data-coordinates="10"></div>
+            <div class="game-cell" data-coordinates="11"></div>
+            <div class="game-cell" data-coordinates="12"></div>
+            <div class="game-cell" data-coordinates="20"></div>
+            <div class="game-cell" data-coordinates="21"></div>
+            <div class="game-cell" data-coordinates="22"></div>
         </div>
-        <button type="button">Quit Game</button>
+        <button id="quit-game-btn" type="button">Quit Game</button>
     </div>
     <script src="script.js"></script>
 </body>
