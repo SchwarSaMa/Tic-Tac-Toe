@@ -1,13 +1,3 @@
-(function (){
-    console.log('To start Tic Tac Toe type "nameYourGame = startGame()".');
-})();
-
-function startGame(){
-    const newGame = gameController();
-    console.log('Type "nameYourGame.playRound(row, column)" and replace "row" and "column" with values from 0 to 2. This command will put your token where you want it.')
-    return newGame;
-}
-
 function gameboard() {
     const rows = 3;
     const columns = 3;
@@ -22,7 +12,6 @@ function gameboard() {
         }
     };
     const getBoard = () => board;
-    const printBoard = () => console.log(board);
     const addToken = (row, col, token) => {
         if(board[row][col] != '' || row > 2 || col > 2){
             return false;
@@ -53,7 +42,7 @@ function gameboard() {
         return {isWin, isTie};
     };
 
-   return {initResBoard, getBoard, printBoard, addToken, determineWinner};
+   return {initResBoard, getBoard, addToken, determineWinner};
 }
 
 function createPlayer(name, token) {
@@ -87,44 +76,22 @@ function gameController (nameOne, nameTwo){
     const players = [pOne, pTwo];
     const detPlayer = determinePlayer(players);
 
-    // Initialize game with a new board and a random player to start.
     board.initResBoard();
-    board.printBoard();
-    console.log(`${detPlayer.getPlayer().playerName}'s turn`);
 
-    // We'll use this function to play the game in the console.
     const playRound = (row, col) => {
         let activeToken;
 
         const validMove = board.addToken(row, col, activeToken = detPlayer.getPlayer().playerToken);
-        board.printBoard();
 
         if(board.determineWinner(activeToken).isWin){
             detPlayer.getPlayer().addScore();
-            console.log('______________________________________');
-            console.log(`${detPlayer.getPlayer().playerName} wins!`);
-            console.log('______________________________________');
-            setTimeout(() => {
-                console.clear();
-                board.initResBoard();
-                console.log('To start Tic Tac Toe type "nameYourGame = startGame()".')
-            }, 3000);
+            board.initResBoard();
         } else if(board.determineWinner(activeToken).isTie){
-            console.log('______________________________________');
-            console.log(`It is a TIE!`);
-            console.log('______________________________________');
-            setTimeout(() => {
-                console.clear();
-                board.initResBoard();
-                console.log('To start Tic Tac Toe type "nameYourGame = startGame()".')
-            }, 3000);
+            board.initResBoard();
         }else if(validMove && !board.determineWinner(activeToken).isWin && !board.determineWinner(activeToken).isTie){
             detPlayer.changePlayer();
             activeToken = detPlayer.getPlayer().playerToken;
-            console.log(`${detPlayer.getPlayer().playerName}'s turn`);
         } else {
-            console.log('Invalid move. Place your token elsewhere!');
-            console.log(`${detPlayer.getPlayer().playerName}'s turn`);
         }
         return board
     };
