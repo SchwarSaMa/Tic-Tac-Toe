@@ -27,7 +27,7 @@ button{
 
 /*Initial Screen*/
 #initial-screen{
-    display: none;
+    display: flex;
     background-color: #50abe7;
     color: #edf2fb;
     font-size: 1.1em;
@@ -41,7 +41,7 @@ button{
 
 /*Game Screen*/
 #game-screen{
-    display: grid;
+    display: none;
     background-color: #50abe7;
 }
 
