@@ -63,9 +63,10 @@ function createPlayer(name, token) {
     let score = 0;
 
     const addScore = () => score++;
+    const deleteScore = () => score = 0;
     const getScore = () => score;
 
-    return {playerName, playerToken, addScore, getScore} 
+    return {playerName, playerToken, addScore, deleteScore, getScore} 
 }
 
 function determinePlayer(players) {
@@ -79,10 +80,10 @@ function determinePlayer(players) {
     return {getPlayer, changePlayer};
 }
 
-function gameController (){
+function gameController (nameOne, nameTwo){
     const board = gameboard();
-    const pOne = createPlayer('max', 'X');
-    const pTwo = createPlayer('david', 'O');
+    const pOne = createPlayer(nameOne, 'X');
+    const pTwo = createPlayer(nameTwo, 'O');
     const players = [pOne, pTwo];
     const detPlayer = determinePlayer(players);
 
@@ -133,9 +134,13 @@ function gameController (){
 
 
 (function (){
-    const game = gameController()
+    let game;
+    let gameBoard;
     const gameCell = document.querySelectorAll('.game-cell');
     const scores = document.querySelectorAll('.points');
+    const quitGameBtn = document.querySelector('#quit-game-btn');
+    const [initialScreen, gameScreen] = document.querySelectorAll('.screen');
+    const createPlayerForm = document.querySelector('#create-player');
 
     const renderGame = (gameBoard) => {
         for(i = 0; i < gameCell.length; i++){
@@ -148,9 +153,33 @@ function gameController (){
     // Event Listeners
     gameCell.forEach(cell => cell.addEventListener("click", () => {
         [row, col] = Array.from(cell.dataset.coordinates);
-        const gameBoard = game.playRound(row, col);
+        gameBoard = game.playRound(row, col);
         renderGame(gameBoard);
     }));
+    createPlayerForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const [inputPOne, inputPTwo] = document.querySelectorAll('input');
+        const [namePOne, namePTwo] = document.querySelectorAll('.name');
+
+        game = gameController(String(inputPOne.value), String(inputPTwo.value));
+        namePOne.textContent = inputPOne.value;
+        namePTwo.textContent = inputPTwo.value;
+
+        initialScreen.style.display = 'none';
+        gameScreen.style.display = 'grid';
+
+        inputPOne.value = '';
+        inputPTwo.value = '';
+    });
+    quitGameBtn.addEventListener('click', () => {
+        game.players[0].deleteScore();
+        game.players[1].deleteScore();
+        gameBoard.initResBoard();
+        renderGame(gameBoard);
+        initialScreen.style.display = 'flex';
+        gameScreen.style.display = 'none';
+    });
 })();
 
 
