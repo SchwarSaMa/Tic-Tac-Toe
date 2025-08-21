@@ -75,39 +75,52 @@ function gameController (nameOne, nameTwo){
     const pTwo = createPlayer(nameTwo, 'O');
     const players = [pOne, pTwo];
     const detPlayer = determinePlayer(players);
+    let activePlayer = detPlayer.getPlayer();
+    console.log('anfang', detPlayer.getPlayer());
+    
 
     board.initResBoard();
 
     const playRound = (row, col) => {
-        let activeToken;
-
         const validMove = board.addToken(row, col, activeToken = detPlayer.getPlayer().playerToken);
 
         if(board.determineWinner(activeToken).isWin){
             detPlayer.getPlayer().addScore();
             board.initResBoard();
+            detPlayer.changePlayer();
+            activePlayer = detPlayer.getPlayer();
+            console.log('win', detPlayer.getPlayer());
         } else if(board.determineWinner(activeToken).isTie){
             board.initResBoard();
+            detPlayer.changePlayer();
+            activePlayer = detPlayer.getPlayer();
+            console.log('tie', detPlayer.getPlayer());
         }else if(validMove && !board.determineWinner(activeToken).isWin && !board.determineWinner(activeToken).isTie){
             detPlayer.changePlayer();
             activeToken = detPlayer.getPlayer().playerToken;
+            activePlayer = detPlayer.getPlayer();
+            console.log('round', detPlayer.getPlayer());
         } else {
+            activePlayer = detPlayer.getPlayer();
+            console.log('foul', detPlayer.getPlayer());
         }
-        return board
+        return [board, activePlayer];
     };
 
-    return {playRound, players};
+    return {playRound, players, activePlayer};
 }
 
 
 (function (){
     let game;
     let gameBoard;
+    let activePlayer;
     const gameCell = document.querySelectorAll('.game-cell');
     const scores = document.querySelectorAll('.points');
     const quitGameBtn = document.querySelector('#quit-game-btn');
     const [initialScreen, gameScreen] = document.querySelectorAll('.screen');
     const createPlayerForm = document.querySelector('#create-player');
+    const [namePOne, namePTwo] = document.querySelectorAll('.name');
 
     const renderGame = (gameBoard) => {
         for(i = 0; i < gameCell.length; i++){
@@ -115,19 +128,25 @@ function gameController (nameOne, nameTwo){
         };
         scores[0].textContent = game.players[0].getScore();
         scores[1].textContent = game.players[1].getScore();
+        if (activePlayer.playerName === namePOne.textContent) {
+            namePOne.style.color = '#af5418';
+            namePTwo.style.color = '#edf2fb';
+        } else {
+            namePTwo.style.color = '#af5418';
+            namePOne.style.color = '#edf2fb';
+        }
     };
 
     // Event Listeners
     gameCell.forEach(cell => cell.addEventListener("click", () => {
         [row, col] = Array.from(cell.dataset.coordinates);
-        gameBoard = game.playRound(row, col);
+        [gameBoard, activePlayer] = game.playRound(row, col);
         renderGame(gameBoard);
     }));
     createPlayerForm.addEventListener('submit', (event) => {
         event.preventDefault();
 
         const [inputPOne, inputPTwo] = document.querySelectorAll('input');
-        const [namePOne, namePTwo] = document.querySelectorAll('.name');
 
         game = gameController(String(inputPOne.value), String(inputPTwo.value));
         namePOne.textContent = inputPOne.value;
@@ -138,6 +157,10 @@ function gameController (nameOne, nameTwo){
 
         inputPOne.value = '';
         inputPTwo.value = '';
+        game.activePlayer.playerName === namePOne.textContent
+        ? namePOne.style.color = '#af5418'
+        : namePTwo.style.color = '#af5418'
+        
     });
     quitGameBtn.addEventListener('click', () => {
         game.players[0].deleteScore();
